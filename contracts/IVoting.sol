@@ -28,7 +28,7 @@ interface IVoting {
 
     function editVotingPeriod(uint _id, uint _newPeriod) external;
 
-    function setMaxAndMinCandidates(uint _maxCandidates) external;
+    function setMaxCandidates(uint _maxCandidates) external;
 
     event candidateInfo(uint id, address candidate, bool existOnThisVoting);
 
