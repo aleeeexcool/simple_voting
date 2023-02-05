@@ -16,12 +16,12 @@ interface IVoting {
     function checkCandidate(address _candidate, uint _id) external view returns(bool);
 
     function getVotingInfo(uint256 _votingID) external view returns (
-            bool,
-            uint256,
-            uint256,
-            uint256,
-            uint256,
-            address
+        bool,
+        uint256,
+        uint256,
+        uint256,
+        uint256,
+        address
         );
 
     function startVoting(uint _id) external;
