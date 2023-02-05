@@ -64,8 +64,52 @@ contract Voting {
         require(Voting[_id].started, "The voting doesn't start!");
         require(Voting[_id].StartDate + Voting[_id].Period > block.timestamp, "The voting has ended!");
 
+        require(checkCandidate(_id, _candidate), "This candidates does not exist in this voting!");
 
+        Voting[_id].candidates[_candidate].balance += msg.value;
+        Voting[_id].Bank += msg.value;
+
+        if (Voting[_id].candidates[_candidate].balance > Voting[_id].WinnerBalance) {
+            Voting[_id].WinnerBalance = Voting[_id].candidates[_candidate].balance;
+            Voting[_id].Winner = _candidate;
+        }
     }
+
+    function withDrawPrize(uint _id) public {
+        require(Voting[_id].started, "The voting doesn't start!");
+        require(Voting[_id].StartDate + Voting[_id].Period < block.timestamp, "The voting is not ended yet!");
+        require(msg.sender == Voting[_id].Winner, "You are not a winner!");
+        require(Voting[_id].Bank > 0, "You have already receive your prize!");
+
+        uint amount = Voting[_id].Bank;
+        uint ownerComission = (Comission * amount) / 100;
+        uint clearAmount = amount - ownerComission;
+        Voting[_id].Bank = 0;
+        payable(owner).transfer(ownerComission);
+        payable(msg.sender).transfer(clearAmount);
+    }
+
+    function checkCandidate(address _candidate, uint _id) public view returns(bool) {
+        return(Voting[_id].Candidates[_candidate].isExistOnThisVoting);
+    }
+
+    function getVotingInfo(uint256 _id) public view returns (
+        bool,
+        uint256,
+        uint256,
+        uint256,
+        uint256,
+        address
+        ) {
+            return(
+                Voting[_id].started,
+                Voting[_id].StartDate,
+                Voting[_id].WinnerBalance,
+                Voting[_id].Bank,
+                Voting[_id].Period,
+                Voting[_id].Winner);
+        }
+
 
 
     event candidateInfo(uint indexed id, address indexed candidate, bool existOnThisVoting);

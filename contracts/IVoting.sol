@@ -9,13 +9,13 @@ interface IVoting {
 
     function deleteCandidate(address _candidate, uint _id) external;
 
-    function takePartInVoting(uint _id, address _candidate) external;
+    function takePartInVoting(uint _id, address _candidate) external payable;
 
-    function withDrawMoney(uint _id) external;
+    function withDrawPrize(uint _id) external;
 
     function checkCandidate(address _candidate, uint _id) external view returns(bool);
 
-    function getVotingInfo(uint256 _votingID) external view returns (
+    function getVotingInfo(uint256 _id) external view returns (
         bool,
         uint256,
         uint256,
@@ -30,9 +30,9 @@ interface IVoting {
 
     function setMaxAndMinCandidates(uint _maxCandidates) external;
 
-    event candidateInfo(uint indexed id, address indexed candidate, bool existOnThisVoting);
+    event candidateInfo(uint id, address candidate, bool existOnThisVoting);
 
-    event votingDraftCreated(uint indexed id);
+    event votingDraftCreated(uint id);
 
-    event votingStarted(uint indexed id, uint startDate);
+    event votingStarted(uint id, uint startDate);
 }
