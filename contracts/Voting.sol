@@ -54,6 +54,7 @@ contract Voting {
 
     function addCandidate(uint _id, address _candidate) public onlyOwner {
         require(Votings[_id].started, "The voting has already begun!");
+        require(address(_candidate) != address(0), "Candidate with zero address!");
         Votings[_id].Candidates[_candidate].isExistOnThisVoting = true;
         emit candidateInfo(_id, _candidate, true);
     }
@@ -121,7 +122,7 @@ contract Voting {
         }
 
     function setMaxCandidates(uint _maxCandidates) public onlyOwner {
-        
+        require(minCandidates <= _maxCandidates, "Minimum number of candidates is 2");
         maxCandidates = _maxCandidates;
     }
 
