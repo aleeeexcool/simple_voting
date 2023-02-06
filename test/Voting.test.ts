@@ -13,8 +13,6 @@ describe("Voting", function() {
     }
 
     it('We can add a voting', async function() {
-        const { owner, user } = await loadFixture(deploy);
-
-        
+        const { owner, user } = await loadFixture(deploy); 
     }); 
 });
