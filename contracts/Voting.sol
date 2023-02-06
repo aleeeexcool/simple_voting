@@ -42,7 +42,7 @@ contract Voting {
         Votings[counter].Period = _period; 
         for( uint i = 0; i < _candidates.length; i++) {
             addCandidate(counter, _candidates[i]);
-        }
+            }
         emit votingDraftCreated(counter);
         counter++;
     }
