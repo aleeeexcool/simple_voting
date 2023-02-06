@@ -121,7 +121,7 @@ contract Voting {
         }
 
     function setMaxCandidates(uint _maxCandidates) public onlyOwner {
-        require(minCandidates <= _maxCandidates, "Minimum number of candidates is 2");
+        
         maxCandidates = _maxCandidates;
     }
 
