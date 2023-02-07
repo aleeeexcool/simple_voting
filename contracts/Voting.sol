@@ -16,7 +16,7 @@ contract Voting {
         bool isExistOnThisVoting;
     }
 
-    struct Voting {
+    struct _Voting {
         bool started;
         address Winner;
         uint StartDate;
@@ -26,7 +26,7 @@ contract Voting {
         mapping(address => Candidate) Candidates;
     }
 
-    mapping(uint => Voting) private Votings;
+    mapping(uint => _Voting) private Votings;
 
     modifier onlyOwner() {
         require(msg.sender == owner, "Sorry, but you are not an owner!");
