@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.7;
 
+import "@openzeppelin/contracts/utils/Address.sol";
+
 contract Voting {
  
     address public owner;
@@ -53,8 +55,9 @@ contract Voting {
     }
 
     function addCandidate(uint _id, address _candidate) public onlyOwner {
+        require(address(_candidate) != address(0), "This candidate with zero address!");
+        require(Address.isContract(_candidate) == false, "A contract can't be a candidate!");
         require(Votings[_id].started, "The voting has already begun!");
-        require(address(_candidate) != address(0), "Candidate with zero address!");
         Votings[_id].Candidates[_candidate].isExistOnThisVoting = true;
         emit candidateInfo(_id, _candidate, true);
     }
@@ -72,9 +75,9 @@ contract Voting {
     }
 
     function takePartInVoting(uint _id, address _candidate) public payable {
+        require(Address.isContract(msg.sender) == false, "A contract can't vote!");
         require(Votings[_id].started, "The voting doesn't start!");
         require(Votings[_id].StartDate + Votings[_id].Period > block.timestamp, "The voting has ended!");
-
         require(checkCandidate(_id, _candidate), "This candidates does not exist in this voting!");
 
         Votings[_id].Candidates[_candidate].balance += msg.value;
