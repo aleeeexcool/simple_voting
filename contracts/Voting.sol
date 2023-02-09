@@ -9,7 +9,7 @@ contract Voting {
     uint public counter;
     uint public minCandidates = 2;
     uint public maxCandidates;
-    uint8 public immutable Comission; 
+    uint public immutable Comission; 
 
     struct Candidate {
         uint balance;
@@ -33,7 +33,7 @@ contract Voting {
         _;
     }
 
-    constructor(uint _maxCandidates, uint8 _comission) {
+    constructor(uint _maxCandidates, uint _comission) {
         owner = msg.sender;
         Comission = _comission;
         maxCandidates = _maxCandidates;
