@@ -23,20 +23,25 @@ describe("Voting", function() {
 
     // it('Owner can add a new voting', async function() { 
     //     const { myVoting, owner, user } = await loadFixture(dep);
+    //     const counter_before = await myVoting.counter();
+    //     let candidates = new Array(5);
+    //     let period = 1000;
 
-    //     await expect(myVoting.connect(owner).addVoting(user.address, 1000)).to.be.revertedWith("Sorry, but you are not an owner!");
+    //     await myVoting.connect(owner).addVoting(candidates, period);
+    //     const counter_after = await myVoting.counter();
+    //     expect(counter_after-counter_before).to.equal(1); ????@de - we have a problem
+    //     const is_candidate5 = await myVoting.checkCandidate(counter_before, user.address);
+    //     expect(is_candidate5).to.equal(true);
     // }); 
 
-    it('Onwer can edit a voting period', async function() { 
-        const { myVoting, owner } = await loadFixture(dep);
+    // it('Owner try to create voting with too many candidates', async function() { 
+    //     const { myVoting, owner } = await loadFixture(dep);
 
-        const old_period = 1000;
-        const id_of_voting = 1;
-        await myVoting.editVotingPeriod(id_of_voting, old_period);
-        
-        const new_period = 2000;
-        await myVoting.connect(owner).editVotingPeriod(id_of_voting, new_period);
-        expect(old_period).to.eq(new_period); 
-        // загуглить как тут можно изменить аргумент + обойти require
-    }); 
+    //     let candidates = new Array();
+    //     for (let i = 1; i < 100; i++) candidates.push(accounts[i].address);
+    //     let someCandidates = new Array(200);
+    //     await expect(
+    //         myVoting.connect(owner).addVoting(someCandidates, candidates)
+    //     ).to.be.revertedWith("Too many candidates!");
+    // }); 
 });
