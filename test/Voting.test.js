@@ -54,14 +54,11 @@ describe("Voting", function () {
 
     it("An owner can change voting's period", async function () {
         const { myVoting, owner } = await loadFixture(deploy);
-        await myVoting.connect(owner).startVoting(0);
-        const votingInfo = await myVoting.getVotingInfo(0);
-        await votingInfo[0] == false;
 
         await myVoting.connect(owner).editVotingPeriod(0, 200);
 
         const _votingInfo = await myVoting.getVotingInfo(0);
-        expect(_votingInfo[3]).to.equal(200);
+        expect(_votingInfo[2]).to.equal(200);
     })
 });
 
