@@ -40,7 +40,9 @@ contract Voting {
     }
 
     function addVoting(address[] calldata _candidates, uint _period) public onlyOwner {
-        require(minCandidates <= _candidates.length && _candidates.length < maxCandidates, "The number of candidates must comply with the boting rules!");
+        require(minCandidates <= _candidates.length && _candidates.length < maxCandidates, 
+            "The number of candidates must comply with the voting rules!"
+        );
         Votings[counter].Period = _period; 
         for( uint i = 0; i < _candidates.length; i++) {
             addCandidate(counter, _candidates[i]);
