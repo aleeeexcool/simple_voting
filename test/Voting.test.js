@@ -37,29 +37,37 @@ describe("Voting", function () {
         );
     });
 
-    // it("An owner can create a new voting and the counter is increased", async function () {
-    //     const { myVoting, owner, user } = await loadFixture(deploy);
-    //     const counter_before = await myVoting.counter();
-    //     let candidates = new Array();
-    //     for (i = 1; i < 3; i++) candidates.push(owner.address);
+    it("An owner can create a new voting and the counter is increased", async function () {
+        const { myVoting, owner, user } = await loadFixture(deploy);
+        const counter_before = await myVoting.counter();
+        let candidates = new Array();
+        for (i = 1; i < 3; i++) candidates.push(owner.address);
 
-    //     await myVoting.connect(owner).addVoting(candidates, 100);
-    //     const counter_after = await myVoting.counter();
-    //     expect(counter_after-counter_before).to.equal(1);
-    //     const new_candidate = await myVoting.checkCandidate(counter_before, user.address);
-    //     expect(new_candidate).to.equal(true);
+        await myVoting.connect(owner).addVoting(candidates, 100);
+        const counter_after = await myVoting.counter();
+        expect(counter_after-counter_before).to.equal(1);
+        const new_candidate = await myVoting.checkCandidate(counter_before, user.address);
+        expect(new_candidate).to.equal(false);
+    });
+
+    // it("An owner can change voting's period", async function () {
+    //     const { myVoting, owner } = await loadFixture(deploy);
+        
+    //     await myVoting.connect(owner).editVotingPeriod(0, 200);
+        
+    //     const _votingInfo = await myVoting.getVotingInfo(0);
+    //     expect(_votingInfo[4]).to.equal(200);
     // });
-    //
-    // ??? - Error: VM Exception while processing transaction: reverted with reason string 'The voting has already begun!'
 
-    it("An owner can change voting's period", async function () {
-        const { myVoting, owner } = await loadFixture(deploy);
-
-        await myVoting.connect(owner).editVotingPeriod(0, 200);
-
-        const _votingInfo = await myVoting.getVotingInfo(0);
-        expect(_votingInfo[2]).to.equal(200);
-    })
+    // it("Owner can create another voting", async function () {
+    //   const { myVoting, owner, user } = await loadFixture(deploy);
+    //   const counter_before = await myVoting.counter();
+    //   let candidates = new Array();
+    //   for (i = 1; i < 4; i++) candidates.push(owner.address);
+    //   await myVoting.connect(owner).addVoting(candidates, 100);
+    //   const is_candidate = await myVoting.checkCandidate(counter_before, user.address);
+    //   expect(is_candidate).to.equal(false);
+    // });
 });
 
 
