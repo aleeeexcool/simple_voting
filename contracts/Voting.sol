@@ -64,7 +64,7 @@ contract Voting {
         emit candidateInfo(_id, _candidate, true);
     }
 
-    function deleteCandidate(address _candidate, uint _id) public onlyOwner {
+    function deleteCandidate(uint _id, address _candidate) public onlyOwner {
         require(Votings[_id].started == false, "Voting has already begun!");
         Votings[_id].Candidates[_candidate].isExistOnThisVoting = false;
         emit candidateInfo(_id, _candidate, false);
@@ -78,7 +78,7 @@ contract Voting {
 
     function takePartInVoting(uint _id, address _candidate) public payable {
         require(Address.isContract(msg.sender) == false, "A contract can't vote!");
-        require(Votings[_id].started, "Voting has not yet begun!");
+        require(Votings[_id].started = true, "Voting has not yet begun!");
         require(Votings[_id].StartDate + Votings[_id].Period > block.timestamp, "Voting has ended!");
         require(checkCandidate(_id, _candidate), "This candidates does not exist in this voting!");
 
@@ -91,11 +91,11 @@ contract Voting {
         }
     }
 
-    function withDrawPrize(uint _id) public {
-        require(Votings[_id].started, "Voting has not yet begun!");
+    function withdrawPrize(uint _id) public {
+        require(Votings[_id].started = true, "Voting has not yet begun!");
         require(Votings[_id].StartDate + Votings[_id].Period < block.timestamp, "Voting is not ended yet!");
         require(msg.sender == Votings[_id].Winner, "You are not a winner!");
-        require(Votings[_id].Bank > 0, "You have already receive your prize!");
+        require(Votings[_id].Bank > 0, "You have already received your prize!");
 
         uint amount = Votings[_id].Bank;
         uint ownerComission = (Comission * amount) / 100;

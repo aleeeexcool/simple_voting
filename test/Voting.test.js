@@ -4,12 +4,12 @@ const { expect } = require("chai");
 
 describe("Voting", function () {
     async function deploy() {
-        const [owner, user] = await ethers.getSigners();
+        const [owner, user, candidate] = await ethers.getSigners();
     
         const Voting = await ethers.getContractFactory("Voting");
         const myVoting = await Voting.deploy(5, 10);
     
-        return { myVoting, owner, user };
+        return { myVoting, owner, user, candidate };
     }
 
     it("Deploy with the right owner", async function () {
@@ -54,20 +54,76 @@ describe("Voting", function () {
         const { myVoting, owner } = await loadFixture(deploy);
         
         await myVoting.connect(owner).editVotingPeriod(0, 200);
-        
         const _votingInfo = await myVoting.getVotingInfo(0);
         expect(_votingInfo[4]).to.equal(200);
     });
 
-    // it("Owner can create another voting", async function () {
-    //   const { myVoting, owner, user } = await loadFixture(deploy);
-    //   const counter_before = await myVoting.counter();
-    //   let candidates = new Array();
-    //   for (i = 1; i < 4; i++) candidates.push(owner.address);
-    //   await myVoting.connect(owner).addVoting(candidates, 100);
-    //   const is_candidate = await myVoting.checkCandidate(counter_before, user.address);
-    //   expect(is_candidate).to.equal(false);
-    // });
+    it("An owner can create another voting", async function () {
+        const { myVoting, owner, user } = await loadFixture(deploy);
+        const counter_before = await myVoting.counter();
+        let candidates = new Array();
+        for (i = 1; i < 4; i++) candidates.push(owner.address);
+
+        await myVoting.connect(owner).addVoting(candidates, 300);
+        const new_candidate = await myVoting.checkCandidate(counter_before, user.address);
+        expect(new_candidate).to.equal(false);
+    });
+
+    it("An owner can add candidate to voting", async function () {
+        const { myVoting, owner, user } = await loadFixture(deploy);
+
+        await myVoting.connect(owner).addCandidate(0, user.address);
+        const new_candidate = await myVoting.checkCandidate(0, user.address);
+        expect(new_candidate).to.equal(true);
+    });
+
+    it("An owner can delete candidate from voting", async function () {
+        const { myVoting, owner, user } = await loadFixture(deploy);
+
+        await myVoting.connect(owner).deleteCandidate(0, user.address);
+        const new_candidate = await myVoting.checkCandidate(0, user.address);
+        expect(new_candidate).to.equal(false);
+    });
+
+    it("Only owner can delete candidate from voting", async function () {
+        const { myVoting, user } = await loadFixture(deploy);
+
+        await expect(myVoting.connect(user).deleteCandidate(0, user.address)).to.be.revertedWith(
+            "Sorry, but you are not an owner!");
+    });
+
+    it("Voting has started!", async function () {
+        const { myVoting, owner } = await loadFixture(deploy);
+
+        await myVoting.connect(owner).startVoting(0);
+        
+        const _votingInfo = await myVoting.getVotingInfo(0);
+        expect(_votingInfo[0]).to.equal(true);
+    });
+
+    it("User try to wirhdraw the prize!", async function (){
+        const { myVoting, user } = await loadFixture(deploy);
+
+        await expect(myVoting.connect(user).withdrawPrize(0)).to.be.revertedWith(
+            "You are not a winner!");
+    });
+
+    it("Nobody can't vote after finish", async function () {
+        const { myVoting, user, candidate } = await loadFixture(deploy);
+        const amount = new ethers.BigNumber.from(10).pow(18).mul(1);
+
+        await expect(
+            myVoting.connect(user).takePartInVoting(0, candidate.address, { value: amount })
+        ).to.be.revertedWith("Voting has ended!");
+    });
+
+    it("Owner can change MaxCandidates for futher votings", async function () {
+        const { myVoting, owner } = await loadFixture(deploy);
+
+        await myVoting.connect(owner).setMaxCandidates(1500);
+        let max_candidates = await myVoting.maxCandidates();
+        expect(max_candidates).to.equal(1500);
+    });
 });
 
 
