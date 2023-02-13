@@ -50,14 +50,14 @@ describe("Voting", function () {
         expect(new_candidate).to.equal(false);
     });
 
-    // it("An owner can change voting's period", async function () {
-    //     const { myVoting, owner } = await loadFixture(deploy);
+    it("An owner can change voting's period", async function () {
+        const { myVoting, owner } = await loadFixture(deploy);
         
-    //     await myVoting.connect(owner).editVotingPeriod(0, 200);
+        await myVoting.connect(owner).editVotingPeriod(0, 200);
         
-    //     const _votingInfo = await myVoting.getVotingInfo(0);
-    //     expect(_votingInfo[4]).to.equal(200);
-    // });
+        const _votingInfo = await myVoting.getVotingInfo(0);
+        expect(_votingInfo[4]).to.equal(200);
+    });
 
     // it("Owner can create another voting", async function () {
     //   const { myVoting, owner, user } = await loadFixture(deploy);

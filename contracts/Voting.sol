@@ -52,20 +52,20 @@ contract Voting {
     }
 
     function editVotingPeriod(uint _id, uint _newPeriod) public onlyOwner {
-        require(Votings[_id].started == false, "The voting has already begun!");
+        require(Votings[_id].started == false, "Voting has already begun!");
         Votings[_id].Period = _newPeriod;
     }
 
     function addCandidate(uint _id, address _candidate) public onlyOwner {
         require(address(_candidate) != address(0), "This candidate with zero address!");
         require(Address.isContract(_candidate) == false, "A contract can't be a candidate!");
-        require(Votings[_id].started == false, "The voting has already begun!");
+        require(Votings[_id].started == false, "Voting has already begun!");
         Votings[_id].Candidates[_candidate].isExistOnThisVoting = true;
         emit candidateInfo(_id, _candidate, true);
     }
 
     function deleteCandidate(address _candidate, uint _id) public onlyOwner {
-        require(Votings[_id].started == false, "The voting has already begun!");
+        require(Votings[_id].started == false, "Voting has already begun!");
         Votings[_id].Candidates[_candidate].isExistOnThisVoting = false;
         emit candidateInfo(_id, _candidate, false);
     }
@@ -78,8 +78,8 @@ contract Voting {
 
     function takePartInVoting(uint _id, address _candidate) public payable {
         require(Address.isContract(msg.sender) == false, "A contract can't vote!");
-        require(Votings[_id].started == false, "The voting doesn't start!");
-        require(Votings[_id].StartDate + Votings[_id].Period > block.timestamp, "The voting has ended!");
+        require(Votings[_id].started, "Voting has not yet begun!");
+        require(Votings[_id].StartDate + Votings[_id].Period > block.timestamp, "Voting has ended!");
         require(checkCandidate(_id, _candidate), "This candidates does not exist in this voting!");
 
         Votings[_id].Candidates[_candidate].balance += msg.value;
@@ -92,8 +92,8 @@ contract Voting {
     }
 
     function withDrawPrize(uint _id) public {
-        require(Votings[_id].started == false, "The voting doesn't start!");
-        require(Votings[_id].StartDate + Votings[_id].Period < block.timestamp, "The voting is not ended yet!");
+        require(Votings[_id].started, "Voting has not yet begun!");
+        require(Votings[_id].StartDate + Votings[_id].Period < block.timestamp, "Voting is not ended yet!");
         require(msg.sender == Votings[_id].Winner, "You are not a winner!");
         require(Votings[_id].Bank > 0, "You have already receive your prize!");
 
