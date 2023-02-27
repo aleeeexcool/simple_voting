@@ -16,7 +16,7 @@ describe("Voting", function () {
         const { myVoting, owner } = await loadFixture(deploy);
   
         expect(await myVoting.owner()).to.equal(owner.address);
-      });
+    });
 
     it("Should revert with the right error if called from user", async function () {
         const { myVoting, user } = await loadFixture(deploy);
