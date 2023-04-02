@@ -7,7 +7,7 @@ contract Voting {
  
     address public owner;
     uint public counter;
-    uint public minCandidates = 2;
+    uint public constant minCandidates = 2;
     uint public maxCandidates;
     uint public immutable Comission; 
 

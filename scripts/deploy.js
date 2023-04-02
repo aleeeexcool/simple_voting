@@ -16,16 +16,12 @@ async function main() {
 
     console.log("Deploying with", await deployer.getAddress())
 
-    const DutchAuction = await ethers.getContractFactory("DutchAuction", deployer)
-    const auction = await DutchAuction.deploy(
-        ethers.utils.parseEther('2.0'),
-        1,
-        "Motorbike"
-    )
-    await auction.deployed()
+    const Voting = await ethers.getContractFactory("Voting", deployer)
+    const voting = await Voting.deploy(10, 5)
+    await voting.deployed()
 
     saveFrontendFiles({
-        DutchAuction: auction
+        Voting: voting
     })
 }
 
