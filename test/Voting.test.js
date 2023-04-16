@@ -12,13 +12,13 @@ describe("Voting", function () {
         return { myVoting, owner, user, candidate };
     }
 
-    it("Deploy with the right owner", async function () {
+    it("deploys with the right owner", async function () {
         const { myVoting, owner } = await loadFixture(deploy);
   
         expect(await myVoting.owner()).to.equal(owner.address);
     });
 
-    it("Should revert with the right error if called from user", async function () {
+    it("should revert with the right error if called from user", async function () {
         const { myVoting, user } = await loadFixture(deploy);
         let candidates = new Array();
 
@@ -27,7 +27,7 @@ describe("Voting", function () {
         );
     });
 
-    it("Should revert with the right error if owner add new voting with too many candidates", async function () {
+    it("should revert with the right error if owner add new voting with too many candidates", async function () {
         const { myVoting, owner } = await loadFixture(deploy);
         let candidates = new Array();
         for (i = 1; i < 10; i++) candidates.push(owner.address);
@@ -37,7 +37,7 @@ describe("Voting", function () {
         );
     });
 
-    it("An owner can create a new voting and the counter is increased", async function () {
+    it("allows an owner can create a new voting and the counter is increased", async function () {
         const { myVoting, owner, user } = await loadFixture(deploy);
         const counter_before = await myVoting.counter();
         let candidates = new Array();
@@ -50,7 +50,7 @@ describe("Voting", function () {
         expect(new_candidate).to.equal(false);
     });
 
-    it("An owner can change voting's period", async function () {
+    it("allows an owner can change voting's period", async function () {
         const { myVoting, owner } = await loadFixture(deploy);
         
         await myVoting.connect(owner).editVotingPeriod(0, 200);
@@ -58,7 +58,7 @@ describe("Voting", function () {
         expect(_votingInfo[4]).to.equal(200);
     });
 
-    it("An owner can create another voting", async function () {
+    it("allows an owner can create another voting", async function () {
         const { myVoting, owner, user } = await loadFixture(deploy);
         const counter_before = await myVoting.counter();
         let candidates = new Array();
@@ -69,7 +69,7 @@ describe("Voting", function () {
         expect(new_candidate).to.equal(false);
     });
 
-    it("An owner can add candidate to voting", async function () {
+    it("allows an owner can add candidate to voting", async function () {
         const { myVoting, owner, user } = await loadFixture(deploy);
 
         await myVoting.connect(owner).addCandidate(0, user.address);
@@ -77,7 +77,7 @@ describe("Voting", function () {
         expect(new_candidate).to.equal(true);
     });
 
-    it("An owner can delete candidate from voting", async function () {
+    it("allows an owner can delete candidate from voting", async function () {
         const { myVoting, owner, user } = await loadFixture(deploy);
 
         await myVoting.connect(owner).deleteCandidate(0, user.address);
@@ -85,14 +85,14 @@ describe("Voting", function () {
         expect(new_candidate).to.equal(false);
     });
 
-    it("Only owner can delete candidate from voting", async function () {
+    it("should revert if anyone wants delete candidate from voting", async function () {
         const { myVoting, user } = await loadFixture(deploy);
 
         await expect(myVoting.connect(user).deleteCandidate(0, user.address)).to.be.revertedWith(
             "Sorry, but you are not an owner!");
     });
 
-    it("Voting has started!", async function () {
+    it("shows that the voting has started!", async function () {
         const { myVoting, owner } = await loadFixture(deploy);
 
         await myVoting.connect(owner).startVoting(0);
@@ -101,14 +101,14 @@ describe("Voting", function () {
         expect(_votingInfo[0]).to.equal(true);
     });
 
-    it("User try to wirhdraw the prize!", async function (){
+    it("allows user try to wirhdraw the prize!", async function (){
         const { myVoting, user } = await loadFixture(deploy);
 
         await expect(myVoting.connect(user).withdrawPrize(0)).to.be.revertedWith(
             "You are not a winner!");
     });
 
-    it("Nobody can't vote after finish", async function () {
+    it("does not allow to vote after the voting ended", async function () {
         const { myVoting, user, candidate } = await loadFixture(deploy);
         const amount = new ethers.BigNumber.from(10).pow(18).mul(1);
 
@@ -117,7 +117,7 @@ describe("Voting", function () {
         ).to.be.revertedWith("Voting has ended!");
     });
 
-    it("Owner can change MaxCandidates for futher votings", async function () {
+    it("allows owner change MaxCandidates for futher votings", async function () {
         const { myVoting, owner } = await loadFixture(deploy);
 
         await myVoting.connect(owner).setMaxCandidates(1500);
